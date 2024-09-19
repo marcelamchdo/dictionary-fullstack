@@ -1,12 +1,14 @@
 # Fullstack Challenge - Dictionary
 
 ## Introdução
+.
 
 Este é um desafio para que possamos ver as suas habilidades como Fullstack Developer.
 
 Nesse desafio você deverá desenvolver um aplicativo para listar palavras em inglês, utilizando como base a API [Free Dictionary API](https://dictionaryapi.dev/). O projeto a ser desenvolvido por você tem como objetivo exibir termos em inglês e gerenciar as palavras visualizadas, conforme indicado nos casos de uso que estão logo abaixo.
 
 [SPOILER] As instruções de entrega e apresentação do challenge estão no final deste Readme (=
+
 
 ### Antes de começar
  
