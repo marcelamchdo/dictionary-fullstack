@@ -1,7 +1,6 @@
 # Fullstack Challenge - Dictionary
 
 ## Introdução
-.
 
 Este é um desafio para que possamos ver as suas habilidades como Fullstack Developer.
 
