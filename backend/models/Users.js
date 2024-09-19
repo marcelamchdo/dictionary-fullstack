@@ -25,7 +25,11 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }}],
-    favorites: [{ type: String }]
+    favorites: [{ 
+        word: { type: String },
+        addedAt: { type: Date, default: Date.now }
+     }
+    ]
 });
 
 UserSchema.pre('save', async function (next) {

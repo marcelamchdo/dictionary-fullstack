@@ -61,4 +61,48 @@ router.get('/entries/en/:word', authMiddleware, async (req, res) => {
     }
   });
 
+  router.post('/entries/en/:word/favorite', authMiddleware, async (req, res) => {
+    const { word } = req.params;
+    const userId = req.user.userId;
+
+    try {
+        const user = await User.findById(userId); 
+
+        const alreadyFavorired = user.favorites.find(i => i.word === word);
+        if (alreadyFavorired) {
+            return res.status(400).json({ message: 'Palavra já está nos favoritos' });
+        }
+        
+        user.favorites.push({ word });
+        await user.save();
+
+        res.status(200).json({message: 'Palavra adicionada aos favoritos' });
+    } catch (err) {
+        console.error('Erro ao favoritar:', err.message);
+        res.status(500).json({ message: 'Erro ao adicionar palavra aos favoritos', error: err.message })
+    }
+  });
+
+  router.delete('/entries/en/:word/unfavorite', authMiddleware, async (req, res) => {
+    const { word } = req.params;
+    const userId = req.user.userId;
+  
+    try {
+      const user = await User.findById(userId);
+  
+      const index = user.favorites.findIndex(item => item.word === word);
+      if (index === -1) {
+        return res.status(400).json({ message: 'Palavra não está nos favoritos' });
+      }
+  
+      user.favorites.splice(index, 1);
+      await user.save();
+  
+      res.status(200).json({ message: 'Palavra removida dos favoritos' });
+    } catch (err) {
+      res.status(500).json({ message: 'Erro ao remover palavra dos favoritos', error: err.message });
+    }
+  });
+  
+
 export default router;
