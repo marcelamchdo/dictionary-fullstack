@@ -19,9 +19,15 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  history: [{
+    word: String,
+    viewedAt: {
+        type: Date,
+        default: Date.now
+    }}],
+    favorites: [{ type: String }]
 });
 
-// Middleware para criptografar a senha antes de salvar
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   const salt = await bcrypt.genSalt(10);
@@ -29,6 +35,5 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
-// Exportando o modelo com "export default"
 const User = mongoose.model('User', UserSchema);
 export default User;
