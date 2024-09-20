@@ -1,6 +1,5 @@
 import express from 'express';
-import axios from 'axios';
-import User from '../models/Users.js';
+import Word from '../models/Word.js';
 
 const router = express.Router();
 
@@ -10,42 +9,32 @@ router.get('/entries/en', async (req, res) => {
   const { search = '', limit = 10, page = 1 } = req.query;
 
   try {
+    let query = {};
+
     if (search) {
-      const response = await axios.get(
-        `https://api.dictionaryapi.dev/api/v2/entries/en/${search}`,
-      );
-
-      const wordData = [
-        ...new Set(response.data.map((wordObj) => wordObj.word)),
-      ];
-
-      const totalDocs = wordData.length;
-      const totalPages = Math.ceil(totalDocs / limit);
-      const startIndex = (page - 1) * limit;
-      const paginatedResults = wordData.slice(startIndex, startIndex + limit);
-
-      if (paginatedResults.length === 0) {
-        return res.status(204).send();
-      }
-
-      return res.status(200).json({
-        results: paginatedResults,
-        totalDocs,
-        page: Number(page),
-        totalPages,
-        hasNext: page < totalPages,
-        hasPrev: page > 1,
-      });
+      query.word = { $regex: search, $options: 'i' }; 
     }
 
-    return res
-      .status(400)
-      .json({ message: 'Por favor, forneça um termo de busca.' });
+    const totalDocs = await Word.countDocuments(query);
+
+    const words = await Word.find(query)
+      .skip((page - 1) * limit) 
+      .limit(Number(limit));   
+
+    if (words.length === 0) {
+      return res.status(404).json({ message: 'Nenhuma palavra encontrada' });
+    }
+
+    return res.status(200).json({
+      results: words.map(word => word.word),
+      totalDocs,
+      page: Number(page),
+      totalPages: Math.ceil(totalDocs / limit),
+      hasNext: page < Math.ceil(totalDocs / limit),
+      hasPrev: page > 1,
+    });
   } catch (err) {
-    if (err.response && err.response.status === 404) {
-      return res.status(404).json({ message: 'Palavra não encontrada' });
-    }
-    return res.status(500).json({ message: 'Erro ao buscar palavra' });
+    return res.status(500).json({ message: 'Erro ao buscar palavras', error: err.message });
   }
 });
 
