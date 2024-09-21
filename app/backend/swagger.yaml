@@ -1,0 +1,347 @@
+openapi: 3.0.0
+info:
+  title: Dictionary API
+  description: API para buscar palavras do dicionário, gerenciar favoritos e histórico de visualização.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Servidor local
+
+paths:
+  /auth/signup:
+    post:
+      summary: Criar um novo usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: User 1
+                email:
+                  type: string
+                  example: example@email.com
+                password:
+                  type: string
+                  example: test
+      responses:
+        '201':
+          description: Usuário criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: f3a10cec013ab2c1380acef
+                  name:
+                    type: string
+                    example: User 1
+                  token:
+                    type: string
+                    example: Bearer JWT.Token
+        '400':
+          description: Usuário já existe
+        '500':
+          description: Erro no servidor
+
+  /auth/signin:
+    post:
+      summary: Autenticar usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: example@email.com
+                password:
+                  type: string
+                  example: test
+      responses:
+        '200':
+          description: Autenticado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: f3a10cec013ab2c1380acef
+                  name:
+                    type: string
+                    example: User 1
+                  token:
+                    type: string
+                    example: Bearer JWT.Token
+        '400':
+          description: Credenciais inválidas
+        '500':
+          description: Erro no servidor
+
+  /entries/en:
+    get:
+      summary: Listar palavras do dicionário
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Palavra a ser buscada
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Número de palavras por página
+          default: 10
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Página a ser retornada
+          default: 1
+      responses:
+        '200':
+          description: Lista de palavras com paginação
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: string
+                      example: fire
+                  totalDocs:
+                    type: integer
+                    example: 20
+                  page:
+                    type: integer
+                    example: 1
+                  totalPages:
+                    type: integer
+                    example: 5
+                  hasNext:
+                    type: boolean
+                    example: true
+                  hasPrev:
+                    type: boolean
+                    example: false
+        '404':
+          description: Nenhuma palavra encontrada
+        '500':
+          description: Erro ao buscar palavras
+
+  /entries/en/{word}:
+    get:
+      summary: Buscar detalhes de uma palavra e registrar no histórico
+      parameters:
+        - in: path
+          name: word
+          required: true
+          schema:
+            type: string
+            example: fire
+          description: Palavra a ser buscada
+      responses:
+        '200':
+          description: Informações detalhadas da palavra
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  - word: fire
+                    phonetics: []
+                    meanings: []
+        '404':
+          description: Palavra não encontrada
+        '500':
+          description: Erro ao buscar palavra
+
+  /entries/en/{word}/favorite:
+    post:
+      summary: Adicionar uma palavra aos favoritos do usuário
+      parameters:
+        - in: path
+          name: word
+          required: true
+          schema:
+            type: string
+            example: fire
+          description: Palavra a ser adicionada aos favoritos
+      responses:
+        '200':
+          description: Palavra adicionada aos favoritos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Palavra adicionada aos favoritos
+        '400':
+          description: Palavra já está nos favoritos
+        '500':
+          description: Erro ao adicionar palavra aos favoritos
+
+  /entries/en/{word}/unfavorite:
+    delete:
+      summary: Remover uma palavra dos favoritos do usuário
+      parameters:
+        - in: path
+          name: word
+          required: true
+          schema:
+            type: string
+            example: fire
+          description: Palavra a ser removida dos favoritos
+      responses:
+        '200':
+          description: Palavra removida dos favoritos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Palavra removida dos favoritos
+        '400':
+          description: Palavra não está nos favoritos
+        '500':
+          description: Erro ao remover palavra dos favoritos
+
+  /user/me:
+    get:
+      summary: Retornar o perfil do usuário autenticado
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Perfil do usuário autenticado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: f3a10cec013ab2c1380acef
+                  name:
+                    type: string
+                    example: User 1
+                  email:
+                    type: string
+                    example: example@email.com
+        '404':
+          description: Usuário não encontrado
+        '500':
+          description: Erro ao buscar perfil do usuário
+
+  /user/me/history:
+    get:
+      summary: Retornar o histórico de palavras visualizadas pelo usuário
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Histórico de palavras visualizadas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        word:
+                          type: string
+                          example: fire
+                        added:
+                          type: string
+                          format: date-time
+                          example: 2022-05-05T19:28:13.531Z
+                  totalDocs:
+                    type: integer
+                    example: 20
+                  page:
+                    type: integer
+                    example: 1
+                  totalPages:
+                    type: integer
+                    example: 5
+                  hasNext:
+                    type: boolean
+                    example: true
+                  hasPrev:
+                    type: boolean
+                    example: false
+        '404':
+          description: Nenhuma palavra visualizada encontrada
+        '500':
+          description: Erro ao buscar histórico
+
+  /user/me/favorites:
+    get:
+      summary: Retornar a lista de palavras favoritas do usuário
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de palavras favoritas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        word:
+                          type: string
+                          example: fire
+                        added:
+                          type: string
+                          format: date-time
+                          example: 2022-05-05T19:30:23.928Z
+                  totalDocs:
+                    type: integer
+                    example: 20
+                  page:
+                    type: integer
+                    example: 2
+                  totalPages:
+                    type: integer
+                    example: 5
+                  hasNext:
+                    type: boolean
+                    example: true
+                  hasPrev:
+                    type: boolean
+                    example: false
+        '404':
+          description: Nenhuma palavra favoritada encontrada
+        '500':
+          description: Erro ao buscar favoritos
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

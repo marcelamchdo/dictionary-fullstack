@@ -1,9 +1,11 @@
 import express from 'express';
 import Word from '../models/Word.js';
+import Users from '../models/Users.js'
+import axios from 'axios';
+import authMiddleware from '../middlewares/authMiddleware.js';
+
 
 const router = express.Router();
-
-import authMiddleware from '../middlewares/authMiddleware.js';
 
 router.get('/entries/en', async (req, res) => {
   const { search = '', limit = 10, page = 1 } = req.query;
@@ -39,21 +41,21 @@ router.get('/entries/en', async (req, res) => {
 });
 
 router.get('/entries/en/:word', authMiddleware, async (req, res) => {
-  const { word } = req.params;
-  const userId = req.user.userId;
+  const { word } = req.params; 
+  const userId = req.user.userId; 
 
   try {
-    if (!word) {
-      return res.status(400).json({ message: 'A palavra é obrigatória.' });
-    }
-
     const response = await axios.get(
-      `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`,
+      `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
     );
 
-    const wordData = response.data;
+      if (!response || !response.data) {
+    return res.status(500).json({ message: 'Erro ao buscar palavra' });
+  }
 
-    const user = await User.findById(userId);
+    const wordData = response.data; 
+
+    const user = await Users.findById(userId);
     if (user) {
       const alreadyInHistory = user.history.find((item) => item.word === word);
       if (!alreadyInHistory) {
@@ -62,11 +64,12 @@ router.get('/entries/en/:word', authMiddleware, async (req, res) => {
       }
     }
 
-    res.status(200).json(wordData);
+    return res.status(200).json(wordData);
   } catch (err) {
     if (err.response && err.response.status === 404) {
       return res.status(404).json({ message: 'Palavra não encontrada' });
     }
+    return res.status(500).json({ message: 'Erro ao buscar palavra', error: err.message });
   }
 });
 
@@ -75,10 +78,7 @@ router.post('/entries/en/:word/favorite', authMiddleware, async (req, res) => {
   const userId = req.user.userId;
 
   try {
-    if (!word) {
-      return res.status(400).json({ message: 'A palavra é obrigatória.' });
-    }
-    const user = await User.findById(userId);
+    const user = await Users.findById(userId);
 
     const alreadyFavorired = user.favorites.find((i) => i.word === word);
     if (alreadyFavorired) {
@@ -90,7 +90,6 @@ router.post('/entries/en/:word/favorite', authMiddleware, async (req, res) => {
 
     res.status(200).json({ message: 'Palavra adicionada aos favoritos' });
   } catch (err) {
-    console.error('Erro ao favoritar:', err.message);
     res.status(500).json({
       message: 'Erro ao adicionar palavra aos favoritos',
       error: err.message,
@@ -106,11 +105,8 @@ router.delete(
     const userId = req.user.userId;
 
     try {
-      if (!word) {
-        return res.status(400).json({ message: 'A palavra é obrigatória.' });
-      }
       
-      const user = await User.findById(userId);
+      const user = await Users.findById(userId);
 
       const index = user.favorites.findIndex((item) => item.word === word);
       if (index === -1) {

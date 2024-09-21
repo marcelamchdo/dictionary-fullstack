@@ -56,7 +56,6 @@ router.post('/signin', async (req, res) => {
         token: `Bearer ${token}`
       });
     } catch (err) {
-      console.error('Erro no login:', err.message);
       res.status(500).json({ message: 'Erro no servidor', error: err.message });
     }
   });

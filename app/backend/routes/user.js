@@ -4,17 +4,6 @@ import User from '../models/Users.js';
 
 const router = express.Router();
 
-router.get('/user', authMiddleware, (req, res) => {
-  try {
-    return res.status(200).json({
-      id: req.user.userId, 
-      message: 'Informações do usuário autenticado'
-    });
-  } catch (err) {
-    return res.status(500).json({ message: 'Erro ao buscar informações do usuário' });
-  }
-});
-
 router.get('/me', authMiddleware, async (req, res) => {
   const userId = req.user.userId; 
 
