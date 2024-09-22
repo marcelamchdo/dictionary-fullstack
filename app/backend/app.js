@@ -5,6 +5,11 @@ import dictionaryRoutes from './routes/dictionary.js';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 
+const client = redis.createClient({
+  host: 'localhost',
+  port: 6379
+});
+
 const swaggerDocument = YAML.load('./swagger.yaml');
 
 const app = express(); 

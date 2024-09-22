@@ -1,0 +1,33 @@
+version: '3.9'
+services:
+  backend:
+    container_name: dictionary_fullstack/backend
+    build: ./backend
+    ports:
+      - 3000:3000
+    platform: linux/x86_64
+    working_dir: /app-backend
+    environment:
+      - APP_PORT=3000
+      - JWT_SECRET=secret
+      - MONGO_URI=mongodb+srv://marceladsgn:M%40rcela1@dictionary.wpggw.mongodb.net/dictionary?retryWrites=true&w=majority
+  frontend:
+    container_name: dictionary_fullstack/frontend
+    build: ./frontend
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./frontend:/app
+    environment:
+      - NODE_ENV=development
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/db:/data/db
+  redis:
+  image: "redis:alpine"
+  ports:
+    - "6379:6379"
+
