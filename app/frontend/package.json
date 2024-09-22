@@ -1,0 +1,17 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@mantine/core": "^7.12.2",
+    "@mantine/hooks": "^7.12.2",
+    "zustand": "^5.0.0-rc.2"
+  }
+}
