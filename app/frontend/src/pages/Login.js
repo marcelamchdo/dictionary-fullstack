@@ -1,6 +1,6 @@
 import { Button, Input } from '@mantine/core';
 import { useState } from 'react';
-import api from '../services/api';
+import api, { setToken } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { IconAt, IconKey } from '@tabler/icons-react';
 import '../../src/styles/Login.css';
@@ -14,15 +14,13 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       const response = await api.post('/api/auth/signin', { email, password });
-      localStorage.setItem('token', response.data.token);
+      const token = response.data.token;
+      localStorage.setItem('token', token);
+      setToken(token); 
       navigate('/home');
     } catch (err) {
       setError('Credenciais inválidas');
     }
-  };
-
-  const handleNavigateToRegister = () => {
-    navigate('/signup'); 
   };
 
   return (
@@ -49,9 +47,6 @@ export default function Login() {
         />
         {error && <p>{error}</p>}
         <Button className="login-button" onClick={handleLogin}>Entrar</Button>
-        <Button className="login-button" onClick={handleNavigateToRegister} variant="outline" style={{ marginTop: '0px', backgroundColor: 'transparent' }}>
-          Registrar-se
-        </Button>
       </div>
     </div>
   );
