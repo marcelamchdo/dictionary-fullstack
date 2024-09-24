@@ -1,106 +1,232 @@
+/* Definindo estilos globais */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-  }
-  
+  font-family: 'Poppins', sans-serif;
+  background-color: #f5f7fa;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Layout geral */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.home-container {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+}
+
+.wordlist-container {
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  height: 400px; /* Definindo a altura fixa */
+  overflow-y: auto;
+  display: grid;
+  gap: 10px;
+}
+
+.word-details-container {
+  flex: 1;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tabs-container {
+  flex: 2;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.word-item {
+  padding: 10px;
+  background-color: #e8f0fe;
+  border: 1px solid #c1d7ff;
+  border-radius: 5px;
+  text-align: center;
+  transition: background-color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.word-item:hover {
+  background-color: #bcd9ff;
+}
+
+.loader {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.no-more-words {
+  text-align: center;
+  color: #777;
+  margin-top: 20px;
+}
+
+/* Estilo das Tabs */
+.mantine-Tabs-tab {
+  font-weight: 500;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.mantine-Tabs-tab[data-active] {
+  border-bottom: 3px solid #4a90e2;
+}
+
+.mantine-Tabs-panel {
+  margin-top: 20px;
+}
+
+/* História e Favoritos */
+.history-item, .favorite-item {
+  padding: 12px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.history-item:hover, .favorite-item:hover {
+  background-color: #f1f1f1;
+}
+
+/* Botão Favorito */
+.favorite-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.favorite-button:hover {
+  color: gold;
+}
+
+/* Estilo para mensagens */
+.welcome-message {
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+  margin-top: 20px;
+}
+
+/* Responsividade para mobile */
+@media (max-width: 768px) {
   .home-container {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
+    flex-direction: column; /* Coloca os elementos em coluna para telas menores */
   }
-  
+
   .word-details-container {
-    flex: 1;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    margin-right: 20px;
+    margin-right: 0;
+    margin-bottom: 20px;
   }
-  
-  .word-details-container h2 {
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 15px;
-  }
-  
-  .word-details-container audio {
-    margin-top: 10px;
-  }
-  
+
   .tabs-container {
-    flex: 2;
-  }
-  
-  .mantine-Tabs-tab {
-    font-size: 18px;
-    font-weight: bold;
-    padding: 10px 20px;
-  }
-  
-  .mantine-Tabs-tab[data-active] {
-    border-bottom: 3px solid #1d72b8;
-  }
-  
-  .mantine-Tabs-panel {
     margin-top: 20px;
   }
-  
-  .word-item {
-    padding: 10px;
-    background-color: #e8f0fe;
-    border: 1px solid #c1d7ff;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 10px;
-    text-align: center;
-    transition: background-color 0.2s ease-in-out;
+
+  .word-item, .history-item, .favorite-item {
+    font-size: 14px;
   }
-  
-  .word-item:hover {
-    background-color: #bcd9ff;
+
+  .wordlist-container {
+    height: auto; /* Permite que a altura seja dinâmica */
   }
-  
-  .history-item, .favorite-item {
-    padding: 10px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    margin-bottom: 10px;
-    transition: background-color 0.2s ease-in-out;
+}
+
+/* Estilo dos itens da lista */
+.word-item, .history-item, .favorite-item {
+  padding: 10px;
+  background-color: #e8f0fe;
+  border: 1px solid #c1d7ff;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  text-align: center;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.word-item:hover, .history-item:hover, .favorite-item:hover {
+  background-color: #bcd9ff;
+}
+
+/* Estilo para o container da wordlist com altura fixa */
+.wordlist-container {
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  height: 400px; /* Altura fixa no desktop */
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.mantine-Tabs-tab {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 20px;
+}
+
+.mantine-Tabs-tab[data-active] {
+  border-bottom: 3px solid #1d72b8;
+}
+
+.mantine-Tabs-panel {
+  margin-top: 20px;
+}
+
+.loader {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.no-more-words {
+  text-align: center;
+  color: #777;
+  margin-top: 20px;
+}
+
+/* Adicionar mais estilos amigáveis se necessário */
+.welcome-message {
+  text-align: center;
+  font-size: 1.5em;
+  margin: 30px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .welcome-message {
+    font-size: 1.2em;
   }
-  
-  .history-item:hover, .favorite-item:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .loader {
-    text-align: center;
-    margin-top: 20px;
-  }
-  
-  .no-more-words {
-    text-align: center;
-    color: #777;
-    margin-top: 20px;
-  }
-  
-  @media (max-width: 768px) {
-    .home-container {
-      flex-direction: column;
-    }
-  
-    .word-details-container {
-      margin-right: 0;
-      margin-bottom: 20px;
-    }
-  
-    .word-item, .history-item, .favorite-item {
-      font-size: 14px;
-    }
-  }
-  
+}

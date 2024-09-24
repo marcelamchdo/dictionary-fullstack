@@ -1,422 +1,239 @@
-# Fullstack Challenge - Dictionary
+# Dictionary App
 
-## Introdução
+## Descrição
 
-Este é um desafio para que possamos ver as suas habilidades como Fullstack Developer.
+O Dictionary Fullstack é uma aplicação web que permite ao usuário pesquisar palavras, visualizar definições, fonéticas e adicionar palavras ao histórico e aos favoritos. O projeto foi desenvolvido em uma arquitetura fullstack, utilizando tecnologias modernas para backend e frontend.
 
-Nesse desafio você deverá desenvolver um aplicativo para listar palavras em inglês, utilizando como base a API [Free Dictionary API](https://dictionaryapi.dev/). O projeto a ser desenvolvido por você tem como objetivo exibir termos em inglês e gerenciar as palavras visualizadas, conforme indicado nos casos de uso que estão logo abaixo.
+[dictionary-app](/img/dictionary.gif)
 
-[SPOILER] As instruções de entrega e apresentação do challenge estão no final deste Readme (=
+## Tecnologias Utilizadas
 
+### Front-end
 
-### Antes de começar
- 
-- Prepare o projeto para ser disponibilizado no Github, copiando o conteúdo deste repositório para o seu (ou utilize o fork do projeto e aponte para o Github). Confirme que a visibilidade do projeto é pública (não esqueça de colocar no readme a referência a este challenge);
-- O projeto deve utilizar a Linguagem específica na sua Vaga (caso esteja se candidatando). Por exempo: Python, R, Scala e entre outras;
-- Considere como deadline 5 dias a partir do início do desafio. Caso tenha sido convidado a realizar o teste e não seja possível concluir dentro deste período, avise a pessoa que o convidou para receber instruções sobre o que fazer.
-- Documentar todo o processo de investigação para o desenvolvimento da atividade (README.md no seu repositório); os resultados destas tarefas são tão importantes do que o seu processo de pensamento e decisões à medida que as completa, por isso tente documentar e apresentar os seus hipóteses e decisões na medida do possível.
+- React
+- Zustand (Gerenciamento de estado)
+- Mantine (Estilização)
+- JavaScript (ES6+)
+- HTML5, CSS3 (Flexbox e Grid)
 
-### Instruções iniciais obrigatórias
+### Back-end
 
-- Utilize as seguintes tecnologias:
+- Node.js
+- Express
+- MongoDB (MongoDB Atlas)
+- Axios (para chamadas HTTP)
+- JWT (JSON Web Token)
 
-#### Tecnologias (Front-End):
-- Com ou sem framework (React, Angular, Vue.js, Javascript Vanilla, ou outro da sua escolha)
-- Estilização (Material UI, Semantic UI, Styled Components, etc). Ou escrever o seu proprio sob medida 👌
-- CSS Flexbox + CSS Grid
-- Design Mobile First
-- Gestão de dados (Redux, Context API, Localstorage, etc)
-- Conceitos de Programação Funcional em JS (pelo menos .map, .filter e .reduce)
+### Docker
 
-Atente-se, ao desenvolver a aplicação front-end, para conceitos de usabilidade e adeque a interface com elementos visuais para os usuários do seu sistema.
+- Docker para orquestração de containers
 
-#### Tecnologias (Back-End):
-- API (Node.js, PHP, Ruby, ou outra da sua escolha) com ou sem uso de frameworks
-- Banco de dados (Postgres, MySQL, MongoDB, etc).
+## Instalação e Uso
 
-Como sugestões, pode criar um banco de dados grátis **MongoDB** usando Atlas: https://www.mongodb.com/cloud/atlas. Para conhecer outras plataformas de banco de dados, acesse https://coodesh.com/blog/candidates/heroku-acabou-e-agora-veja-alternativas/
+### Pré-requisitos
 
-#### Organização:
-- Separar o repositório do back do front
-- Aplicação de padrões Clean Code
-- Validação de chamadas assíncronas para evitar travamentos
+- Node.js (versão 14 ou superior)
+- Docker (opcional, mas recomendado para execução com containers)
+- MongoDB Atlas ou local
+- Git
 
-### Modelo de Dados:
+### Clonando o repositório
 
-Conforme indicado na documentação da API, a estrutura de dados presente retorna as seguintes informações:
+```javascript
+git clone https://github.com/marcelamchdo/dictionary_fullstack.git
+cd dictionary_fullstack
+```
+
+### Backend
+
+1. Configurar Variáveis de Ambiente:
+
+Crie um arquivo .env na pasta raiz do backend com as seguintes variáveis:
+
+```javascript
+PORT=3000
+MONGODB_URI=<sua_uri_do_mongodb>
+JWT_SECRET=<sua_chave_secreta_jwt>
+```
+
+2. Instalar Dependências do Backend:
+
+```javascript
+cd backend
+npm install
+```
+
+3. Executar o Backend:
+
+```javascript
+npm start
+```
+
+### Frontend
+
+1. Instalar Dependências do Frontend:
+
+```javascript
+cd frontend
+npm install
+```
+
+3. Executar o Frontend:
+
+```javascript
+npm start
+```
+
+### Docker (Execução com Docker)
+
+1. Construir e Subir os Containers (Opcional):
+
+```javascript
+docker-compose up --build
+```
+
+2. Acesse a aplicação no navegador em http://localhost:3000.
+
+## Rotas do Backend
+
+### Autenticação
+POST ```/api/auth/signup```: Registra um novo usuário.
 
 ```json
-[
-    {
-        "word": "hello",
-        "phonetics": [
-            {
-                "audio": "https://api.dictionaryapi.dev/media/pronunciations/en/hello-au.mp3",
-                "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=75797336",
-                "license": {
-                    "name": "BY-SA 4.0",
-                    "url": "https://creativecommons.org/licenses/by-sa/4.0"
-                }
-            },
-            {
-                "text": "/həˈləʊ/",
-                "audio": "https://api.dictionaryapi.dev/media/pronunciations/en/hello-uk.mp3",
-                "sourceUrl": "https://commons.wikimedia.org/w/index.php?curid=9021983",
-                "license": {
-                    "name": "BY 3.0 US",
-                    "url": "https://creativecommons.org/licenses/by/3.0/us"
-                }
-            },
-            {
-                "text": "/həˈloʊ/",
-                "audio": ""
-            }
-        ],
-        "meanings": [
-            {
-                "partOfSpeech": "noun",
-                "definitions": [
-                    {
-                        "definition": "\"Hello!\" or an equivalent greeting.",
-                        "synonyms": [],
-                        "antonyms": []
-                    }
-                ],
-                "synonyms": [
-                    "greeting"
-                ],
-                "antonyms": []
-            },
-            {
-                "partOfSpeech": "verb",
-                "definitions": [
-                    {
-                        "definition": "To greet with \"hello\".",
-                        "synonyms": [],
-                        "antonyms": []
-                    }
-                ],
-                "synonyms": [],
-                "antonyms": []
-            },
-            {
-                "partOfSpeech": "interjection",
-                "definitions": [
-                    {
-                        "definition": "A greeting (salutation) said when meeting someone or acknowledging someone’s arrival or presence.",
-                        "synonyms": [],
-                        "antonyms": [],
-                        "example": "Hello, everyone."
-                    },
-                    {
-                        "definition": "A greeting used when answering the telephone.",
-                        "synonyms": [],
-                        "antonyms": [],
-                        "example": "Hello? How may I help you?"
-                    },
-                    {
-                        "definition": "A call for response if it is not clear if anyone is present or listening, or if a telephone conversation may have been disconnected.",
-                        "synonyms": [],
-                        "antonyms": [],
-                        "example": "Hello? Is anyone there?"
-                    },
-                    {
-                        "definition": "Used sarcastically to imply that the person addressed or referred to has done something the speaker or writer considers to be foolish.",
-                        "synonyms": [],
-                        "antonyms": [],
-                        "example": "You just tried to start your car with your cell phone. Hello?"
-                    },
-                    {
-                        "definition": "An expression of puzzlement or discovery.",
-                        "synonyms": [],
-                        "antonyms": [],
-                        "example": "Hello! What’s going on here?"
-                    }
-                ],
-                "synonyms": [],
-                "antonyms": [
-                    "bye",
-                    "goodbye"
-                ]
-            }
-        ],
-        "license": {
-            "name": "CC BY-SA 3.0",
-            "url": "https://creativecommons.org/licenses/by-sa/3.0"
-        },
-        "sourceUrls": [
-            "https://en.wiktionary.org/wiki/hello"
-        ]
+Body: {
+    "email": "string",
+    "password": "string"
+}
+
+Response: {
+     "message": "Usuário registrado com sucesso" 
+     }
+```
+
+POST ```/api/auth/signin```: Realiza o login do usuário.
+
+```json
+Body:{ 
+    "email": "string", 
+    "password": "string" 
     }
-]
+Response: {
+    "token": "JWT Token" 
+    }
 ```
-
-### Back-End:
-
-Nessa etapa você deverá construir uma API Restful com as melhores práticas de desenvolvimento.
-
-**Obrigatório 1** - Você deverá atender aos seguintes casos de uso:
-
-- Como usuário, devo ser capaz de realizar login com usuário e senha
-- Como usuário, devo ser capaz de visualizar a lista de palavras do dicionário
-- Como usuário, devo ser capaz de guardar no histórico palavras já visualizadas
-- Como usuário, devo ser capaz de visualizar o histórico de palavras já visualizadas
-- Como usuário, deve ser capaz de guardar uma palavra como favorita
-- Como usuário, deve ser capaz de apagar uma palavra favorita
-- Internamente, a API deve fazer proxy da API Free Dictionary, pois assim o front irá acessar somente a sua API
-
-**Obrigatório 2** - Você deverá desenvolver as seguintes rotas com suas requisições e respostas:
-
-<details open>
-<summary>[GET] /</summary>
-<p>
-Retornar a mensagem "Fullstack Challenge 🏅 - Dictionary"
-</p>
+### Palavras
+GET ```/api/entries/en?page={number}```: Retorna a lista de palavras com paginação.
 
 ```json
-{
-    "message": "Fullstack Challenge 🏅 - Dictionary"
-}
-```
-</details>
-<details open>
-<summary>[POST] /auth/signup</summary>
-
-```json
-{
-    "name": "User 1",
-    "email": "example@email.com",
-    "password": "test"
-}
+Response: { 
+    "results": ["word1", "word2", ...], 
+    "hasNext": true, "totalPages": number }
 ```
 
-```json
-{
-    "id": "f3a10cec013ab2c1380acef",
-    "name": "User 1",
-    "token": "Bearer JWT.Token"
-}
-```
-</details>
-<details open>
-<summary>[POST] /auth/signin</summary>
+GET ```/api/entries/en/:word```:  Pesquisa uma palavra específica e retorna seus detalhes.
 
 ```json
-{
-    "email": "example@email.com",
-    "password": "test"
-}
+Response:{ 
+    "word": "string", 
+    "phonetics": [ ... ], 
+    "meanings": [ ... ] 
+    }
 ```
 
-```json
-{
-    "id": "f3a10cec013ab2c1380acef",
-    "name": "User 1",
-    "token": "Bearer JWT.Token"
-}
-```
-</details>
-<details open>
-<summary>[GET] /entries/en</summary>
-<p>
-Retornar a lista de palavras do dicionário, com paginação e suporte a busca. O endpoint de paginação de uma busca hipotética deve retornar a seguinte estrutura:
-<br/>
-[GET]/entries/en?search=fire&limit=4
-</p>
+POST ```/api/entries/en/:word/favorite```:  Adiciona uma palavra aos favoritos do usuário.
 
 ```json
-{
-    "results": [
-        "fire",
-        "firefly",
-        "fireplace",
-        "fireman"
-    ],
-    "totalDocs": 20,
-    "page": 1,
-    "totalPages": 5, 
-    "hasNext": true,
-    "hasPrev": false
-}
+Response: { "message": "Palavra adicionada aos favoritos" }
 ```
-</details>
-<details open>
-<summary>[GET] /entries/en/:word</summary>
-<p>
-Retornar as informações da palavra especificada e registra o histórico de acesso.
-</p>
-</details>
-<details open>
-<summary>[POST] /entries/en/:word/favorite</summary>
-<p>
-Salva a palavra na lista de favoritas (retorno de dados no body é opcional)
-</p> 
-</details>
-<details open>
-<summary>[DELETE] /entries/en/:word/unfavorite</summary>
-<p>
-Remover a palavra da lista de favoritas (retorno de dados no body é opcional)
-</p>
-</details> 
-<details open>
-<summary>[GET] /user/me</summary>
-<p>
-Retornar o perfil do usúario
-</p>
-</details> 
-<details open>
-<summary>[GET] /user/me/history</summary>
-<p>
-Retornar a lista de palavras visitadas
-</p>
+
+DELETE ```/api/entries/en/:word/unfavorite```:  Remove uma palavra dos favoritos do usuário.
 
 ```json
-{
-    "results": [
-        {
-            "word": "fire",
-            "added": "2022-05-05T19:28:13.531Z"
-        },
-        {
-            "word": "firefly",
-            "added": "2022-05-05T19:28:44.021Z"
-        },
-        {
-            "word": "fireplace",
-            "added": "2022-05-05T19:29:28.631Z"
-        },
-        {
-            "word": "fireman",
-            "added": "2022-05-05T19:30:03.711Z"
-        }
-    ],
-    "totalDocs": 20,
-    "page": 2,
-    "totalPages": 5,
-    "hasNext": true,
-    "hasPrev": true
-}
+Response: { "message": "Palavra removida dos favoritos" }
 ```
-</details> 
-<details open>
-<summary>[GET] /user/me/favorites</summary>
-<p>
-Retornar a lista de palavras marcadas como favoritas
-</p>
+
+### Usuário
+
+GET ```/api/user/me```: Retorna as informações do perfil do usuário logado.
 
 ```json
-{
-    "results": [
-        {
-            "word": "fire",
-            "added": "2022-05-05T19:30:23.928Z"
-        },
-        {
-            "word": "firefly",
-            "added": "2022-05-05T19:30:24.088Z"
-        },
-        {
-            "word": "fireplace",
-            "added": "2022-05-05T19:30:28.963Z"
-        },
-        {
-            "word": "fireman",
-            "added": "2022-05-05T19:30:33.121Z"
-        }
-    ],
-    "totalDocs": 20,
-    "page": 2,
-    "totalPages": 5,
-    "hasNext": true,
-    "hasPrev": true
+Response: { 
+    "email": "string", 
+    "history": [ ... ], 
+    "favorites": [ ... ] }
+```
+
+GET ```/api/user/me/history```:Retorna o histórico de palavras pesquisadas pelo usuário.
+
+```json
+Response: { 
+    "email": "string", 
+    "history": [ ... ], 
+    "favorites": [ ... ] }
+```
+
+GET ```/api/user/me/favorites```:Retorna as palavras favoritas do usuário.
+
+```json
+{ "results": [ 
+    { "word": "string" },
+    ... ] 
 }
 ```
 
-</details>
+##
 
-Além disso, os endpoints devem utilizar os seguintes códigos de status:
-- 200: sucesso com body ou sem body
-- 204: sucesso sem body
-- 400: mensagem de erro em formato humanizado, ou seja, sem informações internas e códigos de erro:
+### .gitignore
 
-```json
-{
-    "message": "Error message"
-}
+Inclua o arquivo .gitignore no seu projeto para evitar o versionamento de arquivos desnecessários, como node_modules, dist, e informações sensíveis.
+
+Exemplo de ```.gitignore```:
+
+```
+# Node
+node_modules/
+.env
+
+# Logs
+logs
+*.log
+
+# Build
+build/
+dist/
+
+# Docker
+docker-compose.override.yml
 ```
 
-**Obrigatório 3** - Você deve criar um script para baixar a lista de palavras do repositório e importar estas palavras para o banco de dados. A Free Dictionary API não possui endpoint com a lista de palavras. Para criar este endpoint será necessário alimentar o seu banco de dados com o [arquivo existente dentro do projeto no Github](https://github.com/meetDeveloper/freeDictionaryAPI/tree/master/meta/wordList).
+## Minha Visão do Projeto
 
-**Diferencial 1** - Descrever a documentação da API utilizando o conceito de Open API 3.0;
+Este projeto foi uma experiência desafiadora e, ao mesmo tempo, extremamente enriquecedora. Apesar de não ter conseguido implementar todas as funcionalidades como gostaria, pude aplicar diversos conceitos de frontend e backend e estruturar uma aplicação fullstack funcional.
 
-**Diferencial 2** - Escrever Unit Tests para os endpoints da API;
+### Desafios e Limitações
 
-**Diferencial 3** - Configurar Docker no Projeto para facilitar o Deploy da equipe de DevOps;
+O principal desafio foi o gerenciamento do tempo. Infelizmente, não consegui finalizar alguns aspectos como eu havia planejado inicialmente, como a implementação de testes unitários mais robustos, a otimização de algumas partes do código, e o design responsivo completamente refinado.
 
-**Diferencial 4** - Deploy em algum servidor, com ou sem automatização do CI.
+A limitação de tempo também impactou na possibilidade de revisar e refatorar certas áreas do código para torná-lo mais eficiente e fácil de escalar. Alguns pontos de performance, como o scroll infinito, poderiam ter sido mais refinados para uma experiência de usuário mais suave.
 
-**Diferencial 5** - Implementar paginação com cursores ao inves de usar page e limit . Ao realizar este diferencial, o retorno dos endpoints deve possuir a seguinte estrutura:
+### Melhorias Futuras
 
-```json
-{
-    "results": [
-        "fire",
-        "firefly",
-        "fireplace",
-        "fireman"
-    ],
-    "totalDocs": 20,
-    "previous": "eyIkb2lkIjoiNTgwZmQxNmjJkOGI5In0",
-    "next": "eyIkb2lkIjoiNTgwZmQxNm1NjJkOGI4In0",
-    "hasNext": true,
-    "hasPrev": true,
-}
-```
+Dado mais tempo, gostaria de fazer os seguintes ajustes e melhorias no projeto:
 
-**Diferencial 6** - Salvar em cache o resultado das requisições ao Free Dictionary API, para agilizar a resposta em caso de buscas com parâmetros repetidos. Sugestões são usar o Redis e/ou MongoDB;
+- **Melhorias no Design Responsivo**: Refinar o layout para dispositivos móveis, garantindo uma experiência consistente em todos os tamanhos de tela.
+- **Otimização do Scroll Infinito**: Melhorar o desempenho do scroll infinito e reduzir as chamadas desnecessárias para a API, garantindo um carregamento mais suave das palavras.
+- **Melhoria na UX (Experiência do Usuário)**: Adicionar animações mais suaves ao alternar entre palavras e ao carregar detalhes de palavras específicas.
+- **Testes Automatizados**: Implementar uma cobertura de testes unitários e testes de integração, garantindo que cada componente do frontend funcione corretamente e a API responda conforme o esperado.
+- **Cache de Dados**: Implementar uma estratégia de cache para otimizar a recuperação de dados no frontend, evitando a necessidade de buscar a lista completa de palavras repetidamente.
 
-O cache pode ser feito a guardar todo o corpo das respostas ou para guardar o resultado das queries do banco. Para identificar a presença de cache, será necessário adicionar os seguintes headers nas respostas:
-- x-cache: valores HIT (retornou dados em cache) ou MISS (precisou buscar no banco)
-- x-response-time: duração da requisição em milissegundos
+### Conclusão
 
-### Front-End:
+Estou satisfeito com o que consegui desenvolver dentro do tempo disponível, mas reconheço que o projeto tem bastante potencial para ser ainda mais aprimorado. Continuarei trabalhando na melhoria do código, revisando a estrutura e buscando otimizações.
 
-Nessa etapa você deverá desenvolver uma aplicação web para consumir a API que você criou.
+Se você tiver qualquer feedback ou sugestões, fique à vontade para abrir uma issue ou entrar em contato comigo! 
 
-**Obrigatório 1** - Você deverá atender aos seguintes casos de uso:
+Muito obrigado por conferir o projeto.
 
-- Como usuário, devo ser capaz de realizar login com usuário e senha
-- Como usuário, devo ser capaz de visualizar uma lista de palavras com rolagem infinita
-- Como usuário, devo ser capaz de visualizar uma palavra, significados e a fonética
-- Como usuário, devo ser capaz de salvar a palavra como favorito
-- Como usuário, devo ser capaz de remover a palavra como favorito
-- Como usuário, devo ser capaz de visitar uma lista com as palavras que já vi anteriormente
+## Challenge
 
-**Obrigatório 2** - Seguir o wireframe para a página de listagem dos dados.
-
-<img src="./img/wireframe.png" width="100%" />
-
-**Diferencial 1** - Escrever Unit Tests ou E2E Test. Escolher a melhor abordagem e biblioteca;
-
-**Diferencial 2** - Configurar Docker no Projeto para facilitar o Deploy da equipe de DevOps;
-
-**Diferencial 3** - Colocar na URL os parametros utilizados na busca, para que seja possível compartilhar a URL;
-
-**Diferencial 4** - Implementar SSR no projeto;
-
-**Diferencial 5** - Implementar o projeto com PWA.
-
-## Readme do Repositório
-
-- Deve conter o título do projeto
-- Uma descrição sobre o projeto em frase
-- Deve conter uma lista com linguagem, framework e/ou tecnologias usadas
-- Como instalar e usar o projeto (instruções)
-- Não esqueça o [.gitignore](https://www.toptal.com/developers/gitignore)
-- Se está usando github pessoal, referencie que é um challenge by coodesh:  
-
->  This is a challenge by [Coodesh](https://coodesh.com/)
-
-## Suporte
-
-Use a [nossa comunidade](https://discord.gg/rdXbEvjsWu) para tirar dúvidas sobre o processo ou envie uma mensagem diretamente a um especialista no chat da plataforma. 
+Este projeto foi desenvolvido como parte de um challenge by Coodesh.

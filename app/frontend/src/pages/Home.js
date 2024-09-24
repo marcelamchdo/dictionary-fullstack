@@ -7,26 +7,27 @@ import WordDetails from '../components/WordDetails';
 export default function Home() {
   const [history, setHistory] = useState([]);
   const [favorites, setFavorites] = useState([]);
-  const [selectedWordDetails, setSelectedWordDetails] = useState(null);
+  const [selectedWordDetails, setSelectedWordDetails] = useState(null); // Mantém a palavra selecionada
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [isLoadingFavorites, setIsLoadingFavorites] = useState(true);
   const [isLoadingWordDetails, setIsLoadingWordDetails] = useState(false);
+  const [wordClicked, setWordClicked] = useState(false); // Estado para saber se uma palavra foi clicada
 
   const fetchHistory = useCallback(async () => {
     const token = localStorage.getItem('token');
-    
+
     if (!token) {
       console.error('Token não encontrado!');
       return;
     }
-  
+
     try {
       const response = await api.get('/api/user/me/history', {
         headers: {
           Authorization: token,
         },
       });
-      
+
       setHistory(response.data.results);
       setIsLoadingHistory(false);
     } catch (error) {
@@ -37,19 +38,19 @@ export default function Home() {
 
   const fetchFavorites = useCallback(async () => {
     const token = localStorage.getItem('token');
-    
+
     if (!token) {
       console.error('Token não encontrado!');
       return;
     }
-  
+
     try {
       const response = await api.get('/api/user/me/favorites', {
         headers: {
           Authorization: token,
         },
       });
-      
+
       setFavorites(response.data.results);
       setIsLoadingFavorites(false);
     } catch (error) {
@@ -60,20 +61,21 @@ export default function Home() {
 
   const fetchWordDetails = useCallback(async (word) => {
     const token = localStorage.getItem('token');
-    
+
     if (!token) {
       console.error('Token não encontrado!');
       return;
     }
-  
+
     try {
       setIsLoadingWordDetails(true);
-      const response = await api.get(`/api/entries/en/${word}`, {
+      setWordClicked(true); // Quando uma palavra é clicada, muda o estado
+      const response = await api.get(`/api/entries/en/${encodeURIComponent(word)}`, {
         headers: {
           Authorization: token,
         },
       });
-      setSelectedWordDetails(response.data); // Armazena os detalhes da palavra
+      setSelectedWordDetails(response.data);
       setIsLoadingWordDetails(false);
     } catch (error) {
       console.error('Erro ao buscar detalhes da palavra:', error);
@@ -86,29 +88,46 @@ export default function Home() {
     fetchFavorites();
   }, [fetchHistory, fetchFavorites]);
 
+  const handleFavoriteUpdate = () => {
+    fetchFavorites();
+  };
+
   return (
     <div className="home-container">
       <div className="word-details-container">
-        {selectedWordDetails && (
-          <WordDetails wordDetails={selectedWordDetails} isLoading={isLoadingWordDetails} />
+        {wordClicked ? (
+          selectedWordDetails ? (
+            <WordDetails
+              wordDetails={selectedWordDetails}
+              isLoading={isLoadingWordDetails}
+              onFavoriteUpdate={handleFavoriteUpdate}
+            />
+          ) : (
+            <Loader />
+          )
+        ) : (
+          <div className="welcome-message">
+            <h2>Welcome to the Dictionary App!</h2>
+            <p>Select a word from the list to see details.</p>
+            {/* <img src="sua-imagem-ilustrativa-aqui.jpg" alt="welcome" style={{ width: '100%' }} /> */}
+          </div>
         )}
       </div>
 
       <div className="tabs-container">
         <Tabs defaultValue="wordlist">
           <Tabs.List>
-            <Tabs.Tab value="wordlist">Lista de Palavras</Tabs.Tab>
-            <Tabs.Tab value="history">Histórico</Tabs.Tab>
-            <Tabs.Tab value="favorites">Favoritos</Tabs.Tab>
+            <Tabs.Tab value="wordlist">Wordlist</Tabs.Tab>
+            <Tabs.Tab value="history">History</Tabs.Tab>
+            <Tabs.Tab value="favorites">Favorites</Tabs.Tab>
           </Tabs.List>
 
           <Tabs.Panel value="wordlist">
-            <WordList onWordClick={fetchWordDetails} /> 
+            <WordList onWordClick={fetchWordDetails} />
           </Tabs.Panel>
 
           <Tabs.Panel value="history">
             <Box className="history-box">
-              <h2>Histórico de Palavras Pesquisadas</h2>
               {isLoadingHistory ? (
                 <Loader className="loader" />
               ) : (
@@ -116,13 +135,11 @@ export default function Home() {
                   {history.length > 0 ? (
                     history.map((item, index) => (
                       <Grid.Col key={index} span={3}>
-                        <div className="history-item">
-                          {item.word}
-                        </div>
+                        <div className="history-item">{item.word}</div>
                       </Grid.Col>
                     ))
                   ) : (
-                    <p>Você ainda não visualizou nenhuma palavra.</p>
+                    <p className="welcome-message">Você ainda não visualizou nenhuma palavra.</p>
                   )}
                 </Grid>
               )}
@@ -138,13 +155,11 @@ export default function Home() {
                   {favorites.length > 0 ? (
                     favorites.map((item, index) => (
                       <Grid.Col key={index} span={3}>
-                        <div className="favorite-item">
-                          {item.word}
-                        </div>
+                        <div className="favorite-item">{item.word}</div>
                       </Grid.Col>
                     ))
                   ) : (
-                    <p>Você ainda não adicionou palavras aos favoritos.</p>
+                    <p className="welcome-message">Você ainda não adicionou palavras aos favoritos.</p>
                   )}
                 </Grid>
               )}
