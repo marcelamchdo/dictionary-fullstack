@@ -52,8 +52,7 @@ Crie um arquivo .env na pasta raiz do backend com as seguintes variáveis:
 
 ```javascript
 PORT=3000
-MONGODB_URI=<sua_uri_do_mongodb>
-JWT_SECRET=<sua_chave_secreta_jwt>
+MONGODB_URI='mongodb+srv://marceladsgn:M%40rcela1@dictionary.wpggw.mongodb.net/dictionary?retryWrites=true&w=majority'
 ```
 
 2. Instalar Dependências do Backend:
