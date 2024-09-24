@@ -4,7 +4,7 @@
 
 O Dictionary Fullstack é uma aplicação web que permite ao usuário pesquisar palavras, visualizar definições, fonéticas e adicionar palavras ao histórico e aos favoritos. O projeto foi desenvolvido em uma arquitetura fullstack, utilizando tecnologias modernas para backend e frontend.
 
-[dictionary-app](/img/dictionary.gif)
+![dictionary-app](/img/dictionary.gif)
 
 ## Tecnologias Utilizadas
 
